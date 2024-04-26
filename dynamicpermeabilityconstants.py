@@ -169,6 +169,6 @@ print(real_residue,'Residues')
 print(real_pole,'Poles')
 div = real_residue/real_pole
 print('mu_0 =',sum(div))
-print('mu_0 = 0.3986e-3 from Ou 2014')
+print('mu_0 = 0.3986e-3 from Ou 2014 when alt==1, i.e. cancellous bone')
 
 
