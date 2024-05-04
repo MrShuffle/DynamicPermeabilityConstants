@@ -24,6 +24,7 @@ alt=1
 
 if alt ==1:
 	# Cancellous bone ex1 
+	text = 'Cancellous bone ex1'
 	phi    = 0.67      # Porosity
 	alpha  = 1.08      # Infitine frequency tortuisty
 	K0     = 7*10**(-9)  # Static permeability
@@ -34,7 +35,9 @@ if alt ==1:
 	F      = alpha/phi # Formation factor
 
 elif alt ==2:
+	
 	# Cancellous bone ex2
+	text = 'Cancellous bone ex2'
 	phi    = 0.8       # Porosity
 	alpha  = 1.1       # Infitine frequency tortuisty
 	K0     = 3e-8      # Static permeability
@@ -45,6 +48,7 @@ elif alt ==2:
 	F      = alpha/phi # Formation factor
 else:
 	# Sandstone
+	text = 'Sandstone'
 	phi    = 0.2      # Porosity
 	alpha  = 3.6      # Infitine frequency tortuisty
 	K0     = 1e-13      # Static permeability
@@ -75,12 +79,18 @@ def JKD(w):
 	complex_number2 = complex(0,-G)
 	a= F/eta_k
 	val = a*K0/(cmath.sqrt(complex_number1)+complex_number2)**(1)
-	
+	s=complex(0,-w)
 	return val
 	
 def PD(w):
 	bop = C2*complex(0,-w)+cmath.sqrt(1+complex(0,-w)*C1) # w=is, then s=-iw
 	pop = eta_k/F
+	return C2/bop
+	
+def RD(w): 
+	s=complex(0,-w)
+	xi = -1/s
+	bop = cmath.sqrt(xi*(xi-C1))-C2
 	return C2/bop
 
 
@@ -96,6 +106,14 @@ P2 = np.ones(4,dtype=complex)
 # Generate artificial data
 for j in range(M):
 	P[j]=JKD(omega[j])	# Data
+	
+
+
+
+
+constants = False
+if constants==True:
+	omega =1/omega
 	
 
 P2 = np.conj(P)
@@ -161,14 +179,27 @@ coeff2 = np.array([As[3], As[2], As[1],As[0]])
 # Find residues and poles
 r,p,k = signal.residue(coeff2,coeff) 
 print('------------- Output ----------------')
+print('Material:',text)
 
-
-real_residue = r.real
-real_pole    = np.abs(p.real)
-print(real_residue,'Residues')
-print(real_pole,'Poles')
-div = real_residue/real_pole
-print('mu_0 =',sum(div))
-print('mu_0 = 0.3986e-3 from Ou 2014 when alt==1, i.e. cancellous bone')
+if constants == True:
+	c=0
+	d=0
+	for j in range(len(p)):
+		if 0<(p.real)[j]<C1:
+			c = np.append(c,p.real[j])
+			d = np.append(d,r.real[j])
+	print(c[1:], 'poles')
+	print(d[1:], 'residues')
+	
+			
+else:
+	real_residue = r.real
+	real_pole    = np.abs(p.real)
+	print(real_residue,'Residues')
+	print(real_pole,'Poles')
+	if alt==1:
+		div = real_residue/real_pole
+		print('mu_0 =',sum(div))
+		print('mu_0 = 0.3986e-3 from Ou 2014 when alt==1, i.e. cancellous bone')
 
 
