@@ -5,9 +5,10 @@ Setup with 4 sampling points
 
 Parameter alt = {1: Cancellous bone,2: Cancellous bone, other: Sandstone} 
 
+When constants == False the results in Ou 2014 is reproduced for alt =1, when constants == True the constants c_j, d_j are reproduced for different media if the function JKD(w) returns -s*val
 
 # Author: J.S.S
-# Last revision: 26.04.24
+# Last revision: 07.05.24
 
 '''
 
@@ -80,7 +81,7 @@ def JKD(w):
 	a= F/eta_k
 	val = a*K0/(cmath.sqrt(complex_number1)+complex_number2)**(1)
 	s=complex(0,-w)
-	return val
+	return val 
 	
 def PD(w):
 	bop = C2*complex(0,-w)+cmath.sqrt(1+complex(0,-w)*C1) # w=is, then s=-iw
